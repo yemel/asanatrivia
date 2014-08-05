@@ -1,7 +1,5 @@
 .trivia
   p Answered: {{ trivia.answered }} / {{ trivia.total }}
-  p Correct : {{ trivia.correct }} / {{ trivia.answered }}
-  p Current: {{ trivia.question.answer.name }}
   
   img(src="res/img/thumb/{{ trivia.question.answer.thumb }}")
 
@@ -9,3 +7,5 @@
     li(ng-repeat='option in trivia.question.options')
       button(ng-click='choose($index)') Select
       span {{ option.name }}
+  
+  p Tip: {{ trivia.question.answer.name }}

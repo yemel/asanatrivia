@@ -11,10 +11,7 @@ class Question
 
 
 class Trivia
-  constructor: (question_asanas, answer_candidates) ->
-    @reset question_asanas, answer_candidates
-
-  reset: (@question_asanas, @answer_candidates) ->
+  constructor: (@question_asanas, @answer_candidates) ->
     @order = _.shuffle @question_asanas
 
     @total    = @question_asanas.length
@@ -42,8 +39,11 @@ class Trivia
 # -----------------------
 # Angular trivia service:
 
-app.service 'trivia', ->
-  new Trivia ASANAS, ASANAS # The service is a Trivia instance itself
+app.service 'triviaService', ->
+  restart: ->
+    # Create a trivia of 20 random questions, with all of the asanas as possible
+    # answer candidates:
+    @trivia = new Trivia _.sample(ASANAS, 5), ASANAS
 
 
 # ---------------
@@ -73,12 +73,11 @@ app.config ['$routeProvider', ($routeProvider) ->
 app.controller 'Home', ($scope, $location) ->
 
 
-app.controller 'Trivia', [ '$scope', '$location', 'trivia',
+app.controller 'Trivia', [ '$scope', '$location', 'triviaService',
 
-  ($scope, $location, trivia) ->
-    trivia.reset _.sample(ASANAS, 4), ASANAS
-
-    $scope.trivia = trivia
+  ($scope, $location, triviaService) ->
+    triviaService.restart()
+    $scope.trivia = triviaService.trivia
 
     $scope.choose = (index) ->
       $scope.trivia.choose $scope.trivia.question.options[index]
@@ -88,8 +87,13 @@ app.controller 'Trivia', [ '$scope', '$location', 'trivia',
 ]
 
 
-app.controller 'Results', [ '$scope', '$location', 'trivia',
+app.controller 'Results', [ '$scope', '$location', 'triviaService',
 
-  ($scope, $location, trivia) ->
-    $scope.trivia = trivia
+  ($scope, $location, triviaService) ->
+    if not triviaService.trivia
+      $location.path '/'
+      return
+
+    $scope.trivia = triviaService.trivia
+
 ]
