@@ -1,0 +1,19 @@
+doctype html
+
+html(ng-app='asanaTrivia')
+  head
+    title Asana Trivia
+
+    //- link(rel='stylesheet', href='/stylesheets/style.css')
+
+    script(src='lib/underscore.js')
+    script(src='lib/angular.min.js')
+    script(src='lib/angular-route.min.js')
+
+    script(src='res/data.js')
+    script(src='app.js')
+
+
+  body
+    .ng-view
+
